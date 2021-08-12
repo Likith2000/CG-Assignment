@@ -1,23 +1,13 @@
-#include<windows.h>
 #include <GL/glut.h>
 #include <vector>
 #include <cmath>
 
 struct Particle {
-        float x;
-        float y;
-        float r;
-        float vx;
-        float vy;
-        float m;
-        float color[3];
+        float x, y, r, vx, vy, m, color[3];
 };
 
 struct Line {
-        float x1;
-        float y1;
-        float x2;
-        float y2;
+        float x1, y1, x2, y2;
 } line;
 
 void timer(int = 0);
@@ -29,22 +19,17 @@ void removeParticles();
 void keyboard(unsigned char, int, int);
 
 int Mx, My, WIN;
-bool PRESSED_LEFT = false, PRESSED_RIGHT = false,
-     PRESSED_MIDDLE = false, SPEED_PARTICLES = false;
+bool PRESSED_LEFT = false, PRESSED_RIGHT = false, PRESSED_MIDDLE = false, SPEED_PARTICLES = false;
 
 std::vector<Particle> particles;
 
 int main(int argc, char **argv)
 {
-        Particle p;
-        //initial centered Huge mass particle
-        p.x = 0;
-        p.y = 0;
-        p.vx = p.vy = 0;
+        Particle p; //initial centered Huge mass particle
+        p.x = p.y = p.vx = p.vy = 0;
         p.m = 10000;
         p.r = 10;
-        p.color[0] = 1;
-        p.color[1] = 1;
+        p.color[0] = p.color[1] = 1;
         p.color[2] = 0;
         particles.push_back(p);
 
@@ -93,12 +78,12 @@ void timer(int)
                 bool not_fall = true;
                 for(int j = 0; j < particles.size(); j++)
                 {
-                        if(j == i || p.m >= 10000) // we consider the 10000 as infinite (big mass) so this particles won't move
+                        if(j == i || p.m >= 10000) // Consider the 10000 as infinite (big mass) so this particles won't move
                                 continue;
 
                         const Particle &p1 = particles[j];
 
-                        float d = sqrt((p1.x - p.x)*(p1.x - p.x) + (p1.y - p.y)*(p1.y - p.y));
+                        float d = sqrt((p1.x - p.x)*(p1.x - p.x) + (p1.y - p.y)*(p1.y - p.y)); //Find Distance
 
                         if(d > p1.r)
                         {
@@ -109,13 +94,13 @@ void timer(int)
                                 not_fall = false;
                 }
 
-                if(not_fall)
+                if(not_fall) //Accelerate Particle
                 {
                         p.x += p.vx;
                         p.y += p.vy;
                 }
-                else
-                        particles.erase(particles.begin()+i);
+                else //Remove Particle
+                        particles.erase(particles.begin()+i); 
         }
 
         glutTimerFunc(1, timer, 0);
@@ -192,7 +177,7 @@ void addParticle(float m, float r, bool randColor, float vx, float vy)
         Particle p;
         p.x = Mx;
         p.y = My;
-        p.vx = vx / 30; // /30 in case it is a speed particle,
+        p.vx = vx / 30; // /30 in case it is a speed particle
         p.vy = vy / 30; // slow down the speed a little
         p.m = m;
         p.r = r;
@@ -227,7 +212,7 @@ void keyboard(unsigned char key, int x, int y)
                 case 's':
                         SPEED_PARTICLES = !SPEED_PARTICLES;
                         break;
-                case 27:
+                case 'q':
                         removeParticles();
                         glutDestroyWindow(WIN);
                         exit(0);
